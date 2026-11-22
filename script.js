@@ -62,7 +62,7 @@ if (copyEmailBtn) {
     });
 }
 
-// 4. FORM KONTAK INTERAKTIF (SIMULASI FRONTEND)
+// 4. FORM KONTAK -> LANGSUNG BUKA GMAIL PENGUNJUNG
 const contactForm = document.getElementById("contactForm");
 const formStatus = document.getElementById("formStatus");
 
@@ -71,7 +71,8 @@ if (contactForm && formStatus) {
         event.preventDefault();
 
         const senderName = document.getElementById("senderName").value.trim();
-        const senderEmail = document.getElementById("senderEmail").value.trim();
+        const senderEmailInput = document.getElementById("senderEmail");
+        const senderEmail = senderEmailInput.value.trim();
         const senderMessage = document.getElementById("senderMessage").value.trim();
 
         if (!senderName || !senderEmail || !senderMessage) {
@@ -80,8 +81,30 @@ if (contactForm && formStatus) {
             return;
         }
 
+        if (!senderEmailInput.checkValidity()) {
+            formStatus.className = "form-status error";
+            formStatus.textContent = "Format email belum valid. Contoh: nama@gmail.com";
+            senderEmailInput.focus();
+            return;
+        }
+
+        const recipient = "karel7424@gmail.com";
+        const subject = `Pesan dari ${senderName} (Website Dunia Karel)`;
+        const body = `Halo Karel,\n\nNama: ${senderName}\nEmail: ${senderEmail}\n\nPesan:\n${senderMessage}`;
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+        window.open(gmailUrl, "_blank", "noopener,noreferrer");
+
         formStatus.className = "form-status success";
-        formStatus.textContent = `Terima kasih, ${senderName}! Pesanmu tercatat di browser (simulasi). Untuk kirim email sungguhan, hubungi langsung ke karel7424@gmail.com.`;
+        formStatus.textContent = `Siap! Gmail untuk mengirim pesan ke ${recipient} sedang dibuka. Jika tab baru tidak terbuka otomatis, klik: `;
+
+        const fallbackLink = document.createElement("a");
+        fallbackLink.href = gmailUrl;
+        fallbackLink.target = "_blank";
+        fallbackLink.rel = "noopener noreferrer";
+        fallbackLink.textContent = "Buka Gmail di sini";
+        formStatus.appendChild(fallbackLink);
+
         contactForm.reset();
     });
 }

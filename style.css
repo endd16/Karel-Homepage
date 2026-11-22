@@ -536,6 +536,12 @@ nav {
     background: var(--pink);
 }
 
+.form-status a {
+    color: var(--ink);
+    font-weight: 900;
+    text-decoration: underline;
+}
+
 /* FOOTER */
 footer {
     text-align: center;
